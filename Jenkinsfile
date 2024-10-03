@@ -17,8 +17,8 @@ pipeline {
     stage('SonarQube analysis') {
       steps{
         script {
-          def scannerHome = tool 'scanner_sonar';
-          withSonarQubeEnv('jenkins-sonar') {
+          def scannerHome = tool 'sonarqubescanner';
+          withSonarQubeEnv('sonarqube') {
             sh """
               ${scannerHome}/bin/sonar-scanner \
               -Dsonar.projectKey=javawebapp \
