@@ -8,13 +8,11 @@ pipeline {
         sh 'mvn clean install'
       }
     }
-    /*
     stage('jacoco') {
       steps{
         jacoco()
       }
     }
-    */
 /*
     stage('SonarQube analysis') {
       steps{
