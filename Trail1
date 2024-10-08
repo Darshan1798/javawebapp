@@ -1,0 +1,119 @@
+pipeline {
+  agent {
+    label "java"
+  }
+  
+  environment {
+    EMAIL_RECIPIENTS = 'pramodprasanna17@gmail.com'
+    PATH = "/opt/apache-maven-3.9.2/bin:${PATH}"
+    NEXUS_URL = 'http://54.92.208.105:8081/repository/snapshotnew/'
+    NEXUS_CREDENTIALS = credentials('jenkins-nexus') // Jenkins credentials for Nexus
+    GROUP_ID = 'com.maven'
+    ARTIFACT_ID = 'SimpleWebApplication'
+    VERSION = '9.1.14-SNAPSHOT'
+    WAR_FILE_NAME = "SimpleWebApplication.war"
+    //WAR_FILE_NAME = "${ARTIFACT_ID}-${VERSION}.war"
+    TOMCAT_CREDENTIALS = credentials('tomcat-password')
+    TOMCAT_URL = 'http://54.224.220.179:8080/'
+    TOMCAT_WEBAPPS_DIR = '/opt/tomcat/apache-tomcat-10.1.30/webapps' // Define your Tomcat webapps directory here
+    WORKSPACE = '/home/tomcat/workspace/Javawebappproject'
+    NEXUSUSER_NAME = 'admin'
+    NEXUS_PASSWORD = 'admin12'
+  }
+  
+  stages {
+    stage('Build') {
+      steps {
+        sh 'mvn clean install'
+      }
+    }
+
+    stage('Jacoco') {
+      steps {
+        jacoco()
+      }
+    }
+
+    stage('SonarQube Analysis') {
+      steps {
+        script {
+          def scannerHome = tool 'sonarqubescanner'
+          withSonarQubeEnv('sonarqube') {
+            sh """
+              ${scannerHome}/bin/sonar-scanner \
+              -Dsonar.projectKey=javawebappproject \
+              -Dsonar.projectName=javawebappproject \
+              -Dsonar.projectVersion=1.0 \
+              -Dsonar.java.binaries='target/classes'
+            """
+          }
+        }
+      }
+    }
+
+    stage("Sonar Quality Gate Check") {
+      steps {
+        timeout(time: 1, unit: 'MINUTES') {
+          script {
+            def qualityGate = waitForQualityGate()
+            if (qualityGate.status != 'OK') {
+              error "Pipeline aborted due to quality gate failure: ${qualityGate.status}"
+            }
+          }
+        }
+      }
+    }
+
+    stage('Upload to Nexus') {
+      steps {
+        nexusArtifactUploader artifacts: [[
+          artifactId: 'SimpleWebApplication', 
+          classifier: '', 
+          file: 'target/SimpleWebApplication.war', 
+          type: 'war'
+        ]], 
+        credentialsId: 'jenkins-nexus', 
+        groupId: 'com.maven', 
+        nexusUrl: '54.92.208.105:8081', // Ensure protocol is included
+        nexusVersion: 'nexus3', 
+        protocol: 'http', 
+        repository: 'snapshotnew', 
+        version: '9.1.14-SNAPSHOT'
+      }
+    }
+    
+    stage('Deploy WAR from Nexus to Tomcat') {
+      agent {
+        label "tomcat"
+      }
+      steps {
+        script {
+          // Download the WAR from Nexus
+          sh """
+curl -u ${NEXUSUSER_NAME}:${NEXUS_PASSWORD} -O ${NEXUS_URL}${WAR_FILE_NAME}
+"""
+}
+}
+}
+
+stage('Deploy WAR to Tomcat') {
+          agent {
+              label "tomcat"
+                }
+           steps {
+               withCredentials([usernamePassword(credentialsId: 'tomcat-password', usernameVariable: 'hostmanager', passwordVariable: 'hostmanager1')]) {
+                   script {
+                       // Deploy the WAR file to Tomcat using Tomcat Manager API
+                       sh """
+                       sudo systemctl stop tomcat
+                      // mv ${TOMCAT_WEBAPPS_DIR}/*.war /home/
+                       cp ${WAR_FILE_NAME} ${TOMCAT_WEBAPPS_DIR}
+                       sudo systemctl start tomcat
+                       #curl -u hostmanager:hostmanager1 --upload-file ${WAR_FILE_NAME} ${TOMCAT_URL}=/.&update=true
+                       """
+                   }
+               }
+           }
+       }
+      }
+}
