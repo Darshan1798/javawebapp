@@ -5,7 +5,7 @@ pipeline {
   
   environment {
     EMAIL_RECIPIENTS = 'darshankumard1798@gmail.com'
-    PATH = "/opt/apache-tomcat-10.1.30/bin:${PATH}"
+    PATH = "/opt/apache-maven-3.9.2/bin:${PATH}"
     NEXUS_URL = 'http://13.232.216.130:8081/repository/snapshotnew/'
     NEXUS_CREDENTIALS = credentials('nexus-jenkins') // Jenkins credentials for Nexus
     GROUP_ID = 'com.maven'
