@@ -90,7 +90,7 @@ pipeline {
         script {
           // Download the WAR from Nexus
           sh """
-curl -u admin:admin -O http://43.204.32.156/:8081/repository/snapshotnew/com/maven/SimpleWebApplication/9.1.14/SimpleWebApplication-9.1.14.war
+curl -u admin:admin -O http://43.204.32.156:8081/repository/snapshotnew/com/maven/SimpleWebApplication/9.1.14/SimpleWebApplication-9.1.14.war
 """
 }
 }
