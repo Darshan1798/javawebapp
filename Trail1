@@ -81,7 +81,7 @@ pipeline {
         version: '9.1.14-SNAPSHOT'
       }
     }
-    
+    /*
     stage('Deploy WAR from Nexus to Tomcat') {
       agent {
         label "tomcat"
@@ -95,7 +95,7 @@ curl -u ${NEXUSUSER_NAME}:${NEXUS_PASSWORD} -O ${NEXUS_URL}${WAR_FILE_NAME}
 }
 }
 }
-
+*/
 stage('Deploy WAR to Tomcat') {
           agent {
               label "tomcat"
@@ -106,7 +106,6 @@ stage('Deploy WAR to Tomcat') {
                        // Deploy the WAR file to Tomcat using Tomcat Manager API
                        sh """
                        sudo systemctl stop tomcat
-                       mv ${TOMCAT_WEBAPPS_DIR}/*.war /home/
                        cp ${WAR_FILE_NAME} ${TOMCAT_WEBAPPS_DIR}
                        sudo systemctl start tomcat
                        #curl -u hostmanager:hostmanager1 --upload-file ${WAR_FILE_NAME} ${TOMCAT_URL}=/.&update=true
