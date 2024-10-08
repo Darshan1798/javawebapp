@@ -52,10 +52,10 @@ pipeline {
       }
     }
   
-    stage('Deploy to Tomcat') {
-      steps{
-        sh 'echo "Here we deploy the build to tomcat"'
-      }
-    }
-  }
+    stage('Send build artifacts over SSH') {
+        steps{
+                sshPublisher(publishers: [sshPublisherDesc(configName: 'Tomcat_Deploy', transfers: [sshTransfer(cleanRemote: false, excludes: '', execCommand: '', execTimeout: 120000, flatten: false, makeEmptyDirs: false, noDefaultExcludes: false, patternSeparator: '[, ]+', remoteDirectory: 'apache-tomcat-10.1.30/webapps', remoteDirectorySDF: false, removePrefix: 'target', sourceFiles: 'target/SimpleWebApplication.war')], usePromotionTimestamp: false, useWorkspaceInPromotion: false, verbose: true)])
+            }
+        }
+ }
 }
