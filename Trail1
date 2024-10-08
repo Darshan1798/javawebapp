@@ -16,7 +16,7 @@ pipeline {
     TOMCAT_CREDENTIALS = credentials('jenkins-tomcat2')
     TOMCAT_URL = 'http://13.233.146.122:8080/'
     TOMCAT_WEBAPPS_DIR = '/opt/apache-tomcat-10.1.30/webapps' // Define your Tomcat webapps directory here
-    WORKSPACE = '/home/tomcat/workspace/Javawebappproject'
+    WORKSPACE = '/home/tomcat/workspace/tomcat'
     NEXUSUSER_NAME = 'admin'
     NEXUS_PASSWORD = 'admin'
   }
