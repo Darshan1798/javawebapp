@@ -105,6 +105,7 @@ stage('Deploy WAR to Tomcat') {
                    script {
                        // Deploy the WAR file to Tomcat using Tomcat Manager API
                        sh """
+                       sudo systemctl stop tomcat
                        cp SimpleWebApplication-9.1.14.war /opt/apache-tomcat-10.1.30/webapps
                        sudo systemctl start tomcat
                        #curl -u hostmanager:hostmanager1 --upload-file ${WAR_FILE_NAME} ${TOMCAT_URL}=/.&update=true
@@ -115,5 +116,21 @@ stage('Deploy WAR to Tomcat') {
        }
 
       }
+post {
+    failure {
+      script {
+        mail(to: EMAIL_RECIPIENTS,
+             subject: "Job '${env.JOB_NAME}' (${env.BUILD_NUMBER}) failed",
+             body: "Please visit ${env.BUILD_URL} for further information")
+      }
+    }
+    success {
+      script {
+        mail(to: EMAIL_RECIPIENTS, 
+             subject: "Job '${env.JOB_NAME}' (${env.BUILD_NUMBER}) succeeded.",
+             body: "Please visit ${env.BUILD_URL} for further information.")
+      }
+    }
+  }
 }
 
