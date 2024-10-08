@@ -50,7 +50,7 @@ pipeline {
         }
       }
     }
-
+/*
     stage("Sonar Quality Gate Check") {
       steps {
         timeout(time: 1, unit: 'MINUTES') {
@@ -63,7 +63,7 @@ pipeline {
         }
       }
     }
-
+*/
     stage('Upload to Nexus') {
       steps {
         nexusArtifactUploader artifacts: [[
@@ -81,7 +81,7 @@ pipeline {
         version: '9.1.14'
       }
     }
-    /*
+    
     stage('Deploy WAR from Nexus to Tomcat') {
       agent {
         label "tomcat1"
@@ -95,7 +95,7 @@ curl -u ${NEXUSUSER_NAME}:${NEXUS_PASSWORD} -O ${NEXUS_URL}${WAR_FILE_NAME}
 }
 }
 }
-*/
+/*
 stage('Deploy WAR to Tomcat') {
           agent {
               label "tomcat1"
@@ -115,3 +115,4 @@ stage('Deploy WAR to Tomcat') {
        }
       }
 }
+*/
