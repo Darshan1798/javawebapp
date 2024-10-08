@@ -84,7 +84,7 @@ pipeline {
     /*
     stage('Deploy WAR from Nexus to Tomcat') {
       agent {
-        label "tomcat"
+        label "tomcat1"
       }
       steps {
         script {
@@ -98,10 +98,10 @@ curl -u ${NEXUSUSER_NAME}:${NEXUS_PASSWORD} -O ${NEXUS_URL}${WAR_FILE_NAME}
 */
 stage('Deploy WAR to Tomcat') {
           agent {
-              label "tomcat"
+              label "tomcat1"
                 }
            steps {
-               withCredentials([usernamePassword(credentialsId: 'jenkins-tomcat2', usernameVariable: 'hostmanager', passwordVariable: 'hostmanager1')]) {
+                
                    script {
                        // Deploy the WAR file to Tomcat using Tomcat Manager API
                        sh """
@@ -111,7 +111,7 @@ stage('Deploy WAR to Tomcat') {
                        #curl -u hostmanager:hostmanager1 --upload-file ${WAR_FILE_NAME} ${TOMCAT_URL}=/.&update=true
                        """
                    }
-               }
+               
            }
        }
       }
