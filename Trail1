@@ -13,7 +13,7 @@ pipeline {
     VERSION = '9.1.14-SNAPSHOT'
     WAR_FILE_NAME = "SimpleWebApplication.war"
     //WAR_FILE_NAME = "${ARTIFACT_ID}-${VERSION}.war"
-    TOMCAT_CREDENTIALS = credentials('tomcat-password')
+    TOMCAT_CREDENTIALS = credentials('jenkins-tomcat2')
     TOMCAT_URL = 'http://13.233.146.122:8080/'
     TOMCAT_WEBAPPS_DIR = '/opt/apache-tomcat-10.1.30/webapps' // Define your Tomcat webapps directory here
     WORKSPACE = '/home/tomcat/workspace/Javawebappproject'
@@ -101,7 +101,7 @@ stage('Deploy WAR to Tomcat') {
               label "tomcat"
                 }
            steps {
-               withCredentials([usernamePassword(credentialsId: 'tomcat-password', usernameVariable: 'hostmanager', passwordVariable: 'hostmanager1')]) {
+               withCredentials([usernamePassword(credentialsId: 'jenkins-tomcat2', usernameVariable: 'hostmanager', passwordVariable: 'hostmanager1')]) {
                    script {
                        // Deploy the WAR file to Tomcat using Tomcat Manager API
                        sh """
