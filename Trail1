@@ -69,7 +69,7 @@ pipeline {
         nexusArtifactUploader artifacts: [[
           artifactId: 'SimpleWebApplication', 
           classifier: '', 
-          file: 'target/SimpleWebApplication.war', 
+          file: 'target/SimpleWebApplication-${env.BUILD_NUMBER}.war', 
           type: 'war'
         ]], 
         credentialsId: 'nexus-jenkins', 
