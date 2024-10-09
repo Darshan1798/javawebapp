@@ -10,7 +10,7 @@ pipeline {
     NEXUS_CREDENTIALS = credentials('nexus-jenkins') // Jenkins credentials for Nexus
     GROUP_ID = 'com.maven'
     ARTIFACT_ID = 'SimpleWebApplication'
-    VERSION = '9.1.14'
+    VERSION = 'VersionNumber(versionNumberString: '1.0.${BUILDS_ALL_TIME}')'
     WAR_FILE_NAME = "SimpleWebApplication.war"
     //WAR_FILE_NAME = "${ARTIFACT_ID}-${VERSION}.war"
     TOMCAT_CREDENTIALS = credentials('jenkins-tomcat2')
@@ -69,7 +69,7 @@ pipeline {
         nexusArtifactUploader artifacts: [[
           artifactId: 'SimpleWebApplication', 
           classifier: '', 
-          file: 'target/SimpleWebApplication-${env.BUILD_NUMBER}.war', 
+          file: 'target/SimpleWebApplication-${VERSION}.war', 
           type: 'war'
         ]], 
         credentialsId: 'nexus-jenkins', 
@@ -90,7 +90,7 @@ pipeline {
         script {
           // Download the WAR from Nexus
           sh """
-curl -u admin:admin -O http://43.204.36.168:8081/repository/snapshotnew/com/maven/SimpleWebApplication/9.1.14/SimpleWebApplication-9.1.14.war
+curl -u admin:admin -O http://43.204.36.168:8081/repository/snapshotnew/com/maven/SimpleWebApplication/${VERSION}/SimpleWebApplication-${VERSION}.war
 """
 }
 }
@@ -120,15 +120,15 @@ post {
     failure {
       script {
         mail(to: EMAIL_RECIPIENTS,
-             subject: "Job '${env.JOB_NAME}' (${env.BUILD_NUMBER}) failed",
-             body: "Please visit ${env.BUILD_URL} for further information")
+             subject: "Job '${env.JOB_NAME}' (${VERSION}) failed",
+             body: "Please visit ${VERSION} for further information")
       }
     }
     success {
       script {
         mail(to: EMAIL_RECIPIENTS, 
-             subject: "Job '${env.JOB_NAME}' (${env.BUILD_NUMBER}) succeeded.",
-             body: "Please visit ${env.BUILD_URL} for further information.")
+             subject: "Job '${env.JOB_NAME}' (${VERSION}) succeeded.",
+             body: "Please visit ${VERSION} for further information.")
       }
     }
   }
