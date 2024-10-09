@@ -12,7 +12,7 @@ pipeline {
     ARTIFACT_ID = 'SimpleWebApplication'
     VERSION = "1.0.${env.BUILDS_ALL_TIME}"
     WAR_FILE_NAME = "SimpleWebApplication.war"
-    //WAR_FILE_NAME = "${ARTIFACT_ID}-${env.VERSION}.war"
+    //WAR_FILE_NAME = "${ARTIFACT_ID}-${VERSION}.war"
     TOMCAT_CREDENTIALS = credentials('jenkins-tomcat2')
     TOMCAT_URL = 'http://13.200.215.227:8080/'
     TOMCAT_WEBAPPS_DIR = '/opt/apache-tomcat-10.1.30/webapps' // Define your Tomcat webapps directory here
@@ -69,7 +69,7 @@ pipeline {
         nexusArtifactUploader artifacts: [[
           artifactId: 'SimpleWebApplication', 
           classifier: '', 
-          file: 'target/SimpleWebApplication-${env.VERSION}.war', 
+          file: 'target/SimpleWebApplication-${VERSION}.war', 
           type: 'war'
         ]], 
         credentialsId: 'nexus-jenkins', 
@@ -90,7 +90,7 @@ pipeline {
         script {
           // Download the WAR from Nexus
           sh """
-curl -u admin:admin -O http://43.204.36.168:8081/repository/snapshotnew/com/maven/SimpleWebApplication/${env.VERSION}/SimpleWebApplication-${VERSION}.war
+curl -u admin:admin -O http://43.204.36.168:8081/repository/snapshotnew/com/maven/SimpleWebApplication/${VERSION}/SimpleWebApplication-${VERSION}.war
 """
 }
 }
@@ -127,7 +127,7 @@ post {
     success {
       script {
         mail(to: EMAIL_RECIPIENTS, 
-             subject: "Job '${env.JOB_NAME}' (${env.VERSION}) succeeded.",
+             subject: "Job '${env.JOB_NAME}' (${VERSION}) succeeded.",
              body: "Please visit ${env.VERSION} for further information.")
       }
     }
