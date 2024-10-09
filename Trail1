@@ -10,9 +10,9 @@ pipeline {
     NEXUS_CREDENTIALS = credentials('nexus-jenkins') // Jenkins credentials for Nexus
     GROUP_ID = 'com.maven'
     ARTIFACT_ID = 'SimpleWebApplication'
-    VERSION = 'VersionNumber(versionNumberString: '1.0.${BUILDS_ALL_TIME}')'
+    VERSION = 'VersionNumber(versionNumberString: '1.0.${env.BUILDS_ALL_TIME}')'
     WAR_FILE_NAME = "SimpleWebApplication.war"
-    //WAR_FILE_NAME = "${ARTIFACT_ID}-${VERSION}.war"
+    //WAR_FILE_NAME = "${ARTIFACT_ID}-${env.VERSION}.war"
     TOMCAT_CREDENTIALS = credentials('jenkins-tomcat2')
     TOMCAT_URL = 'http://13.200.215.227:8080/'
     TOMCAT_WEBAPPS_DIR = '/opt/apache-tomcat-10.1.30/webapps' // Define your Tomcat webapps directory here
@@ -69,7 +69,7 @@ pipeline {
         nexusArtifactUploader artifacts: [[
           artifactId: 'SimpleWebApplication', 
           classifier: '', 
-          file: 'target/SimpleWebApplication-${VERSION}.war', 
+          file: 'target/SimpleWebApplication-${env.VERSION}.war', 
           type: 'war'
         ]], 
         credentialsId: 'nexus-jenkins', 
@@ -90,7 +90,7 @@ pipeline {
         script {
           // Download the WAR from Nexus
           sh """
-curl -u admin:admin -O http://43.204.36.168:8081/repository/snapshotnew/com/maven/SimpleWebApplication/${VERSION}/SimpleWebApplication-${VERSION}.war
+curl -u admin:admin -O http://43.204.36.168:8081/repository/snapshotnew/com/maven/SimpleWebApplication/${env.VERSION}/SimpleWebApplication-${VERSION}.war
 """
 }
 }
@@ -121,14 +121,14 @@ post {
       script {
         mail(to: EMAIL_RECIPIENTS,
              subject: "Job '${env.JOB_NAME}' (${VERSION}) failed",
-             body: "Please visit ${VERSION} for further information")
+             body: "Please visit ${env.VERSION} for further information")
       }
     }
     success {
       script {
         mail(to: EMAIL_RECIPIENTS, 
-             subject: "Job '${env.JOB_NAME}' (${VERSION}) succeeded.",
-             body: "Please visit ${VERSION} for further information.")
+             subject: "Job '${env.JOB_NAME}' (${env.VERSION}) succeeded.",
+             body: "Please visit ${env.VERSION} for further information.")
       }
     }
   }
