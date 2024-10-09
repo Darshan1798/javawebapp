@@ -10,7 +10,7 @@ pipeline {
     NEXUS_CREDENTIALS = credentials('nexus-jenkins') // Jenkins credentials for Nexus
     GROUP_ID = 'com.maven'
     ARTIFACT_ID = 'SimpleWebApplication'
-    VERSION = 'VersionNumber(versionNumberString: '1.0.${env.BUILDS_ALL_TIME}')'
+    VERSION = "1.0.${env.BUILDS_ALL_TIME}"
     WAR_FILE_NAME = "SimpleWebApplication.war"
     //WAR_FILE_NAME = "${ARTIFACT_ID}-${env.VERSION}.war"
     TOMCAT_CREDENTIALS = credentials('jenkins-tomcat2')
