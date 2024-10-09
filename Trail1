@@ -78,7 +78,7 @@ pipeline {
         nexusVersion: 'nexus3', 
         protocol: 'http', 
         repository: 'snapshotnew', 
-        version: '9.1.14'
+        version: '${VERSION}'
       }
     }
     
@@ -106,7 +106,7 @@ stage('Deploy WAR to Tomcat') {
                        // Deploy the WAR file to Tomcat using Tomcat Manager API
                        sh """
                        sudo systemctl stop tomcat
-                       cp SimpleWebApplication-9.1.14.war /opt/apache-tomcat-10.1.30/webapps
+                       cp SimpleWebApplication-${VERSION}.war /opt/apache-tomcat-10.1.30/webapps
                        sudo systemctl start tomcat
                        #curl -u hostmanager:hostmanager1 --upload-file ${WAR_FILE_NAME} ${TOMCAT_URL}=/.&update=true
                        """
