@@ -11,8 +11,8 @@ pipeline {
     GROUP_ID = 'com.maven'
     ARTIFACT_ID = 'SimpleWebApplication'
     VERSION = "9.1.14"
-    WAR_FILE_NAME = "SimpleWebApplication.war"
-    //WAR_FILE_NAME = "${ARTIFACT_ID}-${VERSION}.war"
+    //WAR_FILE_NAME = "SimpleWebApplication.war"
+    WAR_FILE_NAME = "${ARTIFACT_ID}-${VERSION}.war"
     TOMCAT_CREDENTIALS = credentials('jenkins-tomcat2')
     TOMCAT_URL = 'http://15.206.210.135:8080/'
     TOMCAT_WEBAPPS_DIR = '/opt/apache-tomcat-10.1.30/webapps' // Define your Tomcat webapps directory here
