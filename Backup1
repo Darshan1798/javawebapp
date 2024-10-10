@@ -81,7 +81,6 @@ pipeline {
         version: '9.1.14'
       }
     }
-    /*
     stage('Deploy WAR from Nexus to Tomcat') {
       agent {
         label "tomcat1"
@@ -114,7 +113,6 @@ stage('Deploy WAR to Tomcat') {
                
            }
        }
-
       }
 post {
     failure {
@@ -132,5 +130,4 @@ post {
       }
     }
   }
-*/
 }
