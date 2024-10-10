@@ -106,6 +106,8 @@ stage('Deploy WAR to Tomcat') {
                        // Deploy the WAR file to Tomcat using Tomcat Manager API
                        sh """
                        sudo systemctl stop tomcat
+                       ls -al
+                       pwd
                        "cp /home/tomcat/workspace/tomcat/SimpleWebApplication-9.1.14.war ${TOMCAT_WEBAPPS_DIR}/"
                        sudo systemctl start tomcat
                        """
