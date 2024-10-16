@@ -50,6 +50,7 @@ pipeline {
         }
       }
     }
+*/
 /*
     stage("Sonar Quality Gate Check") {
       steps {
@@ -64,6 +65,7 @@ pipeline {
       }
     }
 */
+/*
     stage('Upload to Nexus') {
       steps {
         nexusArtifactUploader artifacts: [[
@@ -81,6 +83,8 @@ pipeline {
         version: '9.1.14'
       }
     }
+*/
+/*
     stage('Deploy WAR from Nexus to Tomcat') {
       agent {
         label "tomcat1"
@@ -95,7 +99,8 @@ pwd
 }
 }
 }
-
+*/
+/*
 stage('Deploy WAR to Tomcat') {
           agent {
               label "tomcat1"
@@ -115,7 +120,10 @@ stage('Deploy WAR to Tomcat') {
                
            }
        }
+*/
       }
+}
+/*
 post {
     failure {
       script {
@@ -133,4 +141,3 @@ post {
     }
   }
 */
-}
