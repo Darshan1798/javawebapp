@@ -5,7 +5,7 @@ pipeline {
   
   environment {
     EMAIL_RECIPIENTS = 'darshankumard1798@gmail.com'
-    PATH = "/opt/apache-maven-3.9.2/bin:${PATH}"
+    PATH = "/home/tomcat/apache-maven-3.9.2/bin:${PATH}"
     NEXUS_URL = 'http://15.206.127.120:8081/repository/snapshotnew/'
     NEXUS_CREDENTIALS = credentials('nexus-jenkins') // Jenkins credentials for Nexus
     GROUP_ID = 'com.maven'
@@ -13,9 +13,9 @@ pipeline {
     VERSION = "9.1.14"
     //WAR_FILE_NAME = "SimpleWebApplication.war"
     WAR_FILE_NAME = "${ARTIFACT_ID}-${VERSION}.war"
-    //TOMCAT_CREDENTIALS = credentials('jenkins-tomcat2')
-    //TOMCAT_URL = 'http://15.206.210.135:8080/'
-    //TOMCAT_WEBAPPS_DIR = '/opt/apache-tomcat-10.1.30/webapps' // Define your Tomcat webapps directory here
+    TOMCAT_CREDENTIALS = credentials('tomcat/******(tomcat)')
+    TOMCAT_URL = 'http://43.204.211.112:8080/'
+    TOMCAT_WEBAPPS_DIR = '/home/tomcat/apache-tomcat-10.1.30/webapps' // Define your Tomcat webapps directory here
     WORKSPACE = '/home/tomcat/workspace/tomcat'
     NEXUSUSER_NAME = 'admin'
     NEXUS_PASSWORD = 'admin'
@@ -50,7 +50,6 @@ pipeline {
         }
       }
     }
-
 /*
     stage("Sonar Quality Gate Check") {
       steps {
@@ -65,7 +64,6 @@ pipeline {
       }
     }
 */
-
     stage('Upload to Nexus') {
       steps {
         nexusArtifactUploader artifacts: [[
@@ -76,15 +74,13 @@ pipeline {
         ]], 
         credentialsId: 'nexus-jenkins', 
         groupId: 'com.maven', 
-        nexusUrl: '13.233.65.176:8081', // Ensure protocol is included
+        nexusUrl: '15.206.127.120:8081/', // Ensure protocol is included
         nexusVersion: 'nexus3', 
         protocol: 'http', 
         repository: 'snapshotnew', 
         version: '9.1.14'
       }
     }
-
-/*
     stage('Deploy WAR from Nexus to Tomcat') {
       agent {
         label "tomcat1"
@@ -93,14 +89,13 @@ pipeline {
         script {
           // Download the WAR from Nexus
           sh """
-curl -u admin:admin -O http://13.233.65.176:8081/repository/snapshotnew/com/maven/SimpleWebApplication/9.1.14/SimpleWebApplication-9.1.14.war
+curl -u admin:admin -O http://15.206.127.120:8081/repository/snapshotnew/com/maven/SimpleWebApplication/9.1.14/SimpleWebApplication-9.1.14.war
 pwd
 """
 }
 }
 }
-*/
-/*
+
 stage('Deploy WAR to Tomcat') {
           agent {
               label "tomcat1"
@@ -120,10 +115,7 @@ stage('Deploy WAR to Tomcat') {
                
            }
        }
-*/
       }
-}
-/*
 post {
     failure {
       script {
@@ -140,4 +132,4 @@ post {
       }
     }
   }
-*/
+}
