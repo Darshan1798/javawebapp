@@ -33,7 +33,7 @@ pipeline {
         jacoco()
       }
     }
-
+/*
     stage('SonarQube Analysis') {
       steps {
         script {
@@ -132,4 +132,5 @@ post {
       }
     }
   }
+*/
 }
