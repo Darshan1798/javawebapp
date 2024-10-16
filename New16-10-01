@@ -79,7 +79,13 @@ pipeline {
       		    """
       		    def value = sh(script: "grep '<value>' maven-metadata.xml | sed -e 's/.*<value>\\(.*\\)<\\/value>/\\1/'", returnStdout: true).trim()
         	    echo "Latest Artifact Version: $value"
-		
+                    sh """
+      		    sudo systemctl stop tomcat
+		    curl -u admin:admin -O http://15.206.127.120:8081/repository/maven-snapshots/com/maven/SimpleWebApplication/1.0.0-SNAPSHOT/SimpleWebApplication-${value}.war
+		    pwd
+		    """
+                    sh "cp SimpleWebApplication-${value}.war /home/tomcat/apache-tomcat-10.1.31/webapps"
+		    sh 'sudo systemctl start tomcat'
                 }
          }
      }
