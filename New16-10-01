@@ -73,7 +73,7 @@ pipeline {
 	script {
                     //  Download the WAR from Nexus
                     sh """
-                    curl -u admin:admin -O http://15.206.127.120:8081/repository/snapshotnew/com/maven/SimpleWebApplication/1.0.0-SNAPSHOT/maven-metadata.xml
+                    curl -u admin:admin -O http://15.206.127.120:8081/repository/maven-snapshots/com/maven/SimpleWebApplication/1.0.0-SNAPSHOT/maven-metadata.xml
 		    pwd
 		    ls -al
       		    """
