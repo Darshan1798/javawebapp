@@ -33,7 +33,7 @@ pipeline {
         jacoco()
       }
     }
-/*
+
     stage('SonarQube Analysis') {
       steps {
         script {
@@ -50,7 +50,7 @@ pipeline {
         }
       }
     }
-*/
+
 /*
     stage("Sonar Quality Gate Check") {
       steps {
@@ -65,7 +65,7 @@ pipeline {
       }
     }
 */
-/*
+
     stage('Upload to Nexus') {
       steps {
         nexusArtifactUploader artifacts: [[
@@ -83,7 +83,7 @@ pipeline {
         version: '9.1.14'
       }
     }
-*/
+
 /*
     stage('Deploy WAR from Nexus to Tomcat') {
       agent {
