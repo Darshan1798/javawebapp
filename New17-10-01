@@ -1,0 +1,98 @@
+pipeline {
+  agent {
+    label "Java"
+  }
+  stages {
+    stage('Build') {
+      steps {
+        sh 'mvn clean install'
+      }
+    }
+    
+    stage('jacoco') {
+      steps {
+        jacoco()
+      }
+    }
+    stage('SonarQube analysis') {
+      steps {
+        script {
+          def scannerHome = tool 'sonarqubescanner'
+          withSonarQubeEnv('sonarqube') {
+            sh """
+              ${scannerHome}/bin/sonar-scanner \
+              -Dsonar.projectKey=javawebapp \
+              -Dsonar.projectName=javawebapp \
+              -Dsonar.projectVersion=1.0 \
+              -Dsonar.java.binaries='target/classes'
+            """
+          }
+        }
+      }
+    }
+    /*
+    stage("Sonar Quality Gate Check") {
+      steps {
+        timeout(time: 1, unit: 'HOURS') {
+          script {
+            def qualityGate = waitForQualityGate()
+            if (qualityGate.status != 'OK') {
+              error "Pipeline aborted due to quality gate failure: ${qualityGate.status}"
+            }
+          }
+        }
+      }
+    }
+    */
+    stage('Upload to Nexus') {
+      steps {
+        nexusArtifactUploader(
+          artifacts: [[
+            artifactId: 'SimpleWebApplication', 
+            classifier: '', 
+            file: 'target/SimpleWebApplication.war', 
+            type: 'war'
+          ]], 
+          credentialsId: 'nexus-jenkins', 
+          groupId: 'com.maven', 
+          nexusUrl: '43.204.235.180:8081/', 
+          nexusVersion: 'nexus3', 
+          protocol: 'http', 
+          repository: 'maven-snapshots', 
+          version: '1.0.0-SNAPSHOT'
+        )
+      }
+    }
+  stage('Download Latest WAR from Nexus to tomcat1 server') {
+    agent {
+        label "tomcat"
+    }
+    steps {
+	script {
+                    // Download maven-metadata.xml from Nexus
+                    sh """
+                    curl -u admin:admin -O http://43.204.235.180:8081/repository/maven-snapshots/com/maven/SimpleWebApplication/1.0.0-SNAPSHOT/maven-metadata.xml
+		    pwd
+		    ls -al
+      		    """
+      		    def value = sh(script: "grep '<value>' maven-metadata.xml | sed -e 's/.*<value>\\(.*\\)<\\/value>/\\1/'", returnStdout: true).trim()
+        	    echo "Latest Artifact Version: $value"
+	            sh "curl -u admin:admin -O http://43.204.235.180:8081/repository/maven-snapshots/com/maven/SimpleWebApplication/1.0.0-SNAPSHOT/SimpleWebApplication-${value}.war"
+	     	    sh "pwd"
+                }
+         }
+     }
+     stage('Launchthe application') {
+    agent {
+        label "ansible"
+    }
+    steps {
+	script {
+ 	  	sh """
+                ansible-playbook /etc/ansible/tomcat-playbook.yml -i /etc/ansible/hosts
+            """
+           }
+        }
+     }
+  }
+}
