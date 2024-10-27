@@ -1,5 +1,5 @@
 FROM fedora
-RUN yum update -y && yum install -y java-17-amazon-corretto-devel shadow-utils tar gzip vi findutils
+RUN dnf update -y && dnf install -y java-17-openjdk shadow-utils tar gzip vi findutils
 RUN mkdir -p /home/tomcat
 RUN useradd -d /home/tomcat -s /bin/bash tomcat
 WORKDIR /home/tomcat
