@@ -55,19 +55,19 @@ pipeline {
       }
       steps{
         script {
-                        sh 'sudo docker system prune -a -f'
+                        sh 'docker system prune -a -f'
                     dir('docker') {
                         // Build the Docker image
-                        sh 'sudo docker build --build-arg CACHEBUST=$(date +%s) -t tomcat_image:1.0 .'
+                        sh 'docker build --build-arg CACHEBUST=$(date +%s) -t tomcat_image:1.0 .'
                     }
                     def containerExists = sh(script: 'docker ps -a -q -f name=tomcat_container', returnStdout: true).trim()
                     if (containerExists) {
                         // Stop and remove the container
-                        sh 'sudo docker stop tomcat_container || true'
-                        sh 'sudo docker rm tomcat_container || true'
+                        sh 'docker stop tomcat_container || true'
+                        sh 'docker rm tomcat_container || true'
                       }
                    // Run the Docker container
-                    sh 'sudo docker run -d --name tomcat_container -p 8080:8080 tomcat_image:1.0'
+                    sh 'docker run -d --name tomcat_container -p 8080:8080 tomcat_image:1.0'
           }
         }
       }
